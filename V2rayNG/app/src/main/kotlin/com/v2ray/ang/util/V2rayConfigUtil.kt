@@ -541,9 +541,9 @@ object V2rayConfigUtil {
             // DNS inbound对象
             if (v2rayConfig.inbounds.none { e -> e.protocol == "dokodemo-door" && e.tag == "dns-in" }) {
                 val dnsInboundSettings =  V2rayConfig.InboundBean.InSettingsBean(
-                    address = remoteDns.first(),
-                    port = 53,
-                    network = "tcp,udp")
+                    address = remoteDns.filter{Utils.isPureIpAddress(it)}.first(),  // ip only
+                    port = 53,  // recommend to do not change
+                    network = "udp")  // recommend to receive udp only, as my experience from unknown reason
 
                 v2rayConfig.inbounds.add(
                     V2rayConfig.InboundBean(
@@ -570,17 +570,31 @@ object V2rayConfigUtil {
             v2rayConfig.routing.rules.add(0, V2rayConfig.RoutingBean.RulesBean(
                     type = "field",
                     outboundTag = AppConfig.TAG_DIRECT,
-                    port = "53",
-                    ip = domesticDns,
+                    port = "53",  // dot do not use `port`, specify port inside uri like https://dns.google:835/dns-query
+                    ip = domesticDns.filter{Utils.isPureIpAddress(it)},  // needs to differ from ip and dot uri
                     domain = null)
+            )
+            v2rayConfig.routing.rules.add(0, V2rayConfig.RoutingBean.RulesBean(
+                    type = "field",
+                    outboundTag = AppConfig.TAG_DIRECT,
+                    port = null,
+                    ip = null,
+                    domain = domesticDns.filter{Utils.isDotAddress(it)})
             )
 
             v2rayConfig.routing.rules.add(0, V2rayConfig.RoutingBean.RulesBean(
                     type = "field",
                     outboundTag = AppConfig.TAG_AGENT,
-                    port = "53",
-                    ip = remoteDns,
+                    port = "53",  // the same as above
+                    ip = remoteDns.filter{Utils.isPureIpAddress(it)},  // the same as above
                     domain = null)
+            )
+            v2rayConfig.routing.rules.add(0, V2rayConfig.RoutingBean.RulesBean(
+                    type = "field",
+                    outboundTag = AppConfig.TAG_AGENT,
+                    port = null,
+                    ip = null,
+                    domain = remoteDns.filter{Utils.isDotAddress(it)})
             )
 
             // DNS routing tag
@@ -605,8 +619,8 @@ object V2rayConfigUtil {
         try {
             val servers = ArrayList<Any>()
 
-            Utils.getRemoteDnsServers(app.defaultDPreference).forEach {
-                servers.add(it)
+            Utils.getRemoteDnsServers(app.defaultDPreference).filter{Utils.isPureIpAddress(it)}.forEach {
+                servers.add(it)  // ipv4/ipv6 ip only
             }
 
             v2rayConfig.dns = V2rayConfig.DnsBean(servers = servers)
