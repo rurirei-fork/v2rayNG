@@ -81,7 +81,6 @@ func (v *V2RayPoint) RunLoop() (err error) {
 				if !v.dialer.IsVServerReady() {
 					log.Println("vServer cannot resolved, shutdown")
 					v.StopLoop()
-					v.SupportSet.Shutdown()
 				}
 
 			// stop waiting if manually closed
@@ -130,6 +129,7 @@ func (v *V2RayPoint) shutdownInit() {
 	v.status.Vpoint = nil
 	v.statsManager = nil
 	v.escorter.EscortingDown()
+	v.SupportSet.Shutdown()
 }
 
 func (v *V2RayPoint) pointloop() error {
