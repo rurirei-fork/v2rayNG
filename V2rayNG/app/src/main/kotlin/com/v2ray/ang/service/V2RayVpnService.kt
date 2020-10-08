@@ -253,7 +253,4 @@ class V2RayVpnService : VpnService(), ServiceControl {
         return protect(socket)
     }
 
-    override fun vpnSendFd() {
-        sendFd()
-    }
 }
