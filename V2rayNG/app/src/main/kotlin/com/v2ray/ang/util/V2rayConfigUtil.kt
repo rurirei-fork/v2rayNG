@@ -518,6 +518,8 @@ object V2rayConfigUtil {
                 servers.add(V2rayConfig.DnsBean.ServersBean(domesticDns.first(), 53, dirDomain))
             }
 
+            // `port` could be ignored if uses DoT as address, so do not need to modify this
+
             val routingMode = app.defaultDPreference.getPrefString(SettingsActivity.PREF_ROUTING_MODE, "0")
             if (routingMode == "2" || routingMode == "3") {
                 servers.add(V2rayConfig.DnsBean.ServersBean(domesticDns.first(), 53, arrayListOf("geosite:cn")))
