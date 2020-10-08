@@ -133,7 +133,7 @@ object Utils {
             remoteDns
                     .split(",")
                     .forEach {
-                        if (Utils.isPureIpAddress(it)) {
+                        if (Utils.isPureIpAddress(it) || Utils.isDotAddress(it)) {
                             ret.add(it)
                         }
                     }
@@ -154,7 +154,7 @@ object Utils {
             domesticDns
                     .split(",")
                     .forEach {
-                        if (Utils.isPureIpAddress(it)) {
+                        if (Utils.isPureIpAddress(it) || Utils.isDotAddress(it)) {
                             ret.add(it)
                         }
                     }
@@ -193,6 +193,13 @@ object Utils {
             e.printStackTrace()
             return null
         }
+    }
+
+    /**
+     * is Dot address
+     */
+    fun isDotAddress(value: String): Boolean {
+        return isValidUrl(value) && value.startsWith("https://") && value.endsWith("/dns-query")
     }
 
     /**
