@@ -1,6 +1,6 @@
 # v2rayNG
 
-A V2Ray client for Android 
+A V2Ray client for Android
 
 [![API](https://img.shields.io/badge/API-17%2B-yellow.svg?style=flat)](https://developer.android.com/about/versions/jelly-bean#android-4.2)
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-1.4.0-blue.svg)](https://kotlinlang.org)
